@@ -26,6 +26,9 @@
     "nodemon": "^1.19.0"
   },
   "dependencies": {
-    "express": "^4.16.4"
+    "axios": "^0.18.0",
+    "bcrypt-nodejs": "0.0.3",
+    "express": "^4.16.4",
+    "mongoose": "^5.5.10"
   }
 }
