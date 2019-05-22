@@ -32,28 +32,40 @@ class App extends Component {
     urlInput: '',
     imageUrl: '',
     box: {},
+    boxes: [],
     route: 'signin',
     isSignedIn: false,
     user: {}
   }
 
   loadUser = data => {
-    this.setState({user: data});
+    this.setState({ user: data });
   }
- 
-  faceLocation = (data) => {
-    const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
-    const image = document.getElementById('inputImage');
-    const width = Number(image.width);
-    const height = Number(image.height);
 
-    const faceBox = {
-      topRow: clarifaiFace.top_row * height,
-      leftCol: clarifaiFace.left_col * width,
-      bottomRow: height - (clarifaiFace.bottom_row * height),
-      rightCol: width - (clarifaiFace.right_col * width)
+  faceLocation = (data) => {
+    const regions = data.outputs[0].data.regions;
+    const faceBoxes = [];
+
+    for (let i = 0; i < regions.length; i++) {
+
+      // const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
+      const clarifaiFace = regions[i].region_info.bounding_box;
+      const image = document.getElementById('inputImage');
+      const width = Number(image.width);
+      const height = Number(image.height);
+
+      const faceBox = {
+        topRow: clarifaiFace.top_row * height,
+        leftCol: clarifaiFace.left_col * width,
+        bottomRow: height - (clarifaiFace.bottom_row * height),
+        rightCol: width - (clarifaiFace.right_col * width)
+      }
+
+      this.setState({ box: faceBox });
+      faceBoxes.push(faceBox);
+
     }
-    this.setState({ box: faceBox });
+    this.setState({ boxes: faceBoxes });
   }
 
   onInputChange = e => {
@@ -67,14 +79,14 @@ class App extends Component {
       Clarifai.FACE_DETECT_MODEL,
       this.state.urlInput)
       .then(response => {
-        // console.log(response);
-        
-        $.put('/api/image', {id: this.state.user._id})
-        .then(res => {
-          // console.log(res);
-          this.setState(Object.assign(this.state.user, {entries: res.data.entries}))
-        });
-        
+        console.log(response);
+
+        $.put('/api/image', { id: this.state.user._id })
+          .then(res => {
+            // console.log(res);
+            this.setState(Object.assign(this.state.user, { entries: res.data.entries }))
+          });
+
         this.faceLocation(response);
       })
       .catch(err => console.log(err));
@@ -82,7 +94,7 @@ class App extends Component {
 
   onRouteChange = (route) => {
     if (route === 'signout') {
-      this.setState({ isSignedIn: false });
+      this.setState({ isSignedIn: false, urlInput: '', imageUrl: '' });
     } else if (route === 'home') {
       this.setState({ isSignedIn: true });
     }
@@ -90,7 +102,7 @@ class App extends Component {
   }
 
   render() {
-    const { route, isSignedIn, box, imageUrl } = this.state;
+    const { route, isSignedIn, box, boxes, imageUrl } = this.state;
     return (
       <div className="App">
         <Particles
@@ -106,7 +118,7 @@ class App extends Component {
               onInputChange={this.onInputChange}
               onImageDetect={this.onImageDetect}
             />
-            <FaceRecognitioin box={box} imageUrl={imageUrl} />
+            <FaceRecognitioin boxes={boxes} box={box} imageUrl={imageUrl} />
           </div>
           : (
             route === 'signin'

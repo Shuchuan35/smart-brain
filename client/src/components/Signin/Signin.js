@@ -18,7 +18,7 @@ class Signin extends React.Component {
 
         $.post('/api/signin', this.state)
             .then(res => {
-                console.log(res.data);
+                // console.log(res.data);
                 if (res.data._id) {
                     this.props.loadUser(res.data);
                     this.props.onRouteChange('home');

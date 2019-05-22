@@ -6,3 +6,12 @@
     justify-content: center;
     cursor: pointer;
 }
+
+.bounding-boxes {
+    position: absolute;
+    box-shadow: inset 0 0 0 3px #f21414;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    cursor: pointer;
+}
