@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as $ from 'axios';
 import Particles from 'react-particles-js';
-import Clarifai from 'clarifai';
+// import Clarifai from 'clarifai';
 import Navigation from './components/Navigation/Navigation';
 import Signin from './components/Signin/Signin';
 import Register from './components/Register/Register';
@@ -11,9 +11,9 @@ import Rank from './components/Rank/Rank';
 import FaceRecognitioin from './components/FaceRecognition/FaceRecognition';
 import './App.css';
 
-const app = new Clarifai.App({
-  apiKey: 'f0315d67b9534416985f9380f1ac8963'
-});
+// const app = new Clarifai.App({
+//   apiKey: 'f0315d67b9534416985f9380f1ac8963'
+// });
 
 const particlesOptions = {
   particles: {
@@ -31,7 +31,6 @@ class App extends Component {
   state = {
     urlInput: '',
     imageUrl: '',
-    box: {},
     boxes: [],
     route: 'signin',
     isSignedIn: false,
@@ -42,13 +41,12 @@ class App extends Component {
     this.setState({ user: data });
   }
 
-  faceLocation = (data) => {
+  locateFaces = (data) => {
     const regions = data.outputs[0].data.regions;
     const faceBoxes = [];
 
     for (let i = 0; i < regions.length; i++) {
 
-      // const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
       const clarifaiFace = regions[i].region_info.bounding_box;
       const image = document.getElementById('inputImage');
       const width = Number(image.width);
@@ -61,7 +59,6 @@ class App extends Component {
         rightCol: width - (clarifaiFace.right_col * width)
       }
 
-      this.setState({ box: faceBox });
       faceBoxes.push(faceBox);
 
     }
@@ -75,11 +72,9 @@ class App extends Component {
   onImageDetect = e => {
     this.setState({ imageUrl: this.state.urlInput });
 
-    app.models.predict(
-      Clarifai.FACE_DETECT_MODEL,
-      this.state.urlInput)
-      .then(response => {
-        console.log(response);
+    // app.models.predict(Clarifai.FACE_DETECT_MODEL, this.state.urlInput)
+    $.post('/api/facemodel', { input: this.state.urlInput })
+      .then(res => {
 
         $.put('/api/image', { id: this.state.user._id })
           .then(res => {
@@ -87,9 +82,9 @@ class App extends Component {
             this.setState(Object.assign(this.state.user, { entries: res.data.entries }))
           });
 
-        this.faceLocation(response);
+        this.locateFaces(res.data);
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log('unable to get face model', err));
   }
 
   onRouteChange = (route) => {
@@ -102,7 +97,7 @@ class App extends Component {
   }
 
   render() {
-    const { route, isSignedIn, box, boxes, imageUrl } = this.state;
+    const { route, isSignedIn, boxes, imageUrl } = this.state;
     return (
       <div className="App">
         <Particles
@@ -118,7 +113,7 @@ class App extends Component {
               onInputChange={this.onInputChange}
               onImageDetect={this.onImageDetect}
             />
-            <FaceRecognitioin boxes={boxes} box={box} imageUrl={imageUrl} />
+            <FaceRecognitioin boxes={boxes} imageUrl={imageUrl} />
           </div>
           : (
             route === 'signin'
