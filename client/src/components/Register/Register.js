@@ -15,18 +15,17 @@ class Register extends React.Component {
     }
 
     onRegisterClick = () => {
-        console.log(this.state);
+        // console.log(this.state);
         $.post('/api/register', this.state)
             .then(res => {
-                console.log(res);
-                if (res) {
-                    this.props.loadUser(res);
+                // console.log(res);
+                if (res.data._id) { //res.data.id
+                    this.props.loadUser(res.data);
                     this.props.onRouteChange('home');
                 }
             })
     }
     render() {
-        const { onRouteChange } = this.props;
         return (
             <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
                 <main className="pa4 black-80">

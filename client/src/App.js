@@ -39,6 +39,7 @@ class App extends Component {
 
   loadUser = data => {
     this.setState({user: data});
+    // console.log(this.state.user);
   }
   // componentDidMount() {
   //   $.get('/api/users')
@@ -68,19 +69,21 @@ class App extends Component {
   }
 
   onImageDetect = e => {
-    // console.log('Click');
     this.setState({ imageUrl: this.state.urlInput });
+
     app.models.predict(
       Clarifai.FACE_DETECT_MODEL,
       this.state.urlInput)
-      .then((res) => {
-        // console.log(res);
-        $.put('/api/image', {id: this.state.id})
+      .then(response => {
+        // console.log(response);
+        
+        $.put('/api/image', {id: this.state.user._id})
         .then(res => {
-          console.log(res);
-          this.setState(Object.assign(this.state.user, {entries: res.entries}))
-        })
-        this.faceLocation(res)
+          // console.log(res);
+          this.setState(Object.assign(this.state.user, {entries: res.data.entries}))
+        });
+        
+        this.faceLocation(response);
       })
       .catch(err => console.log(err));
   }
@@ -106,7 +109,7 @@ class App extends Component {
         {route === 'home'
           ? <div>
             <Logo />
-            <Rank user={this.user} />
+            <Rank user={this.state.user} />
             <ImageLinkForm
               onInputChange={this.onInputChange}
               onImageDetect={this.onImageDetect}
@@ -115,7 +118,7 @@ class App extends Component {
           </div>
           : (
             route === 'signin'
-              ? <Signin onRouteChange={this.onRouteChange} />
+              ? <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
               : <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
           )
         }

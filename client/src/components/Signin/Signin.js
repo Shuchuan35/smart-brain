@@ -19,13 +19,15 @@ class Signin extends React.Component {
         // .then(res => {
         //   console.log(res.data);
         // });
-        const newUser = {
-            email: this.state.email,
-            password: this.state.password
-        }
-        $.post('/api/signin', newUser)
+        // const newUser = {
+        //     email: this.state.email,
+        //     password: this.state.password
+        // }
+        $.post('/api/signin', this.state)
             .then(res => {
-                if (res.status === 200) {
+                console.log(res.data);
+                if (res.data._id) {
+                    this.props.loadUser(res.data);
                     this.props.onRouteChange('home');
                 }
             })

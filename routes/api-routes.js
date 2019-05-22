@@ -44,16 +44,24 @@ module.exports = function (app) {
     //========================
 
     app.post('/api/signin', (req, res) => {
-        console.log('Hi');
+        
         const { email, password } = req.body;
-        console.log(email, password);
-        console.log(req.body.email, req.body.password);
-        if (email === database.users[0].email &&
-            password === database.users[0].password) {
-            res.json(database.users[0]);
-        } else {
-            res.status(400).json('error sign in');
-        }
+       
+        Login.findOne({email: email })
+        .then(data => {
+            // console.log(data);
+            const isValid = bcrypt.compareSync(password, data.hash);
+            // console.log(isValid);
+            if(isValid) {
+                User.findOne({email: email})
+                .then(user => {
+                    res.json(user);
+                })
+                .catch(err => res.status(400).json('error login'));
+            }
+        })
+        .catch(err => res.status(400).json('wrong credentials'));
+
     });
 
     //=======================
@@ -62,18 +70,28 @@ module.exports = function (app) {
 
     app.post('/api/register', (req, res) => {
         const { email, password, name } = req.body;
-        console.log(email, password, name);
-        bcrypt.hash(password, null, null, function (err, hash) {
-            console.log(hash);
-        });
+        // console.log(email, password, name);
 
-        User.create(req.body)
-            .then((data) => {
-                res.json(data);
+        const hash = bcrypt.hashSync(password);
+        // bcrypt.hash(password, null, null, function (err, hash) {
+        //     console.log(hash);
+        // });
+        const newEntry = { hash: hash, email: email }
+
+        Login.create(newEntry)
+            .then(loginData => {
+                return User.create(req.body)
+                // return User.findOneAndUpdate({ _id: userId }, { $push: { kudos: kudoData._id } }, { new: true });
             })
-            .catch(err => {
-                res.json(err);
+            .then(userData => {
+                console.log(userData);
+                res.json(userData);
+            })
+            .catch(function (err) {
+                res.status(400).json('unable to register');
             });
+
+
     });
 
     //========================
