@@ -39,15 +39,8 @@ class App extends Component {
 
   loadUser = data => {
     this.setState({user: data});
-    // console.log(this.state.user);
   }
-  // componentDidMount() {
-  //   $.get('/api/users')
-  //     .then(res => {
-  //       console.log(res.data);
-  //     });
-  // }
-
+ 
   faceLocation = (data) => {
     const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
     const image = document.getElementById('inputImage');
@@ -64,7 +57,6 @@ class App extends Component {
   }
 
   onInputChange = e => {
-    // console.log(e.target.value);
     this.setState({ urlInput: e.target.value });
   }
 

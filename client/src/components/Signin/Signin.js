@@ -14,15 +14,8 @@ class Signin extends React.Component {
     }
 
     onSigninClick = () => {
-        console.log(this.state);
-        // $.get('/api/users')
-        // .then(res => {
-        //   console.log(res.data);
-        // });
-        // const newUser = {
-        //     email: this.state.email,
-        //     password: this.state.password
-        // }
+        // console.log(this.state);
+
         $.post('/api/signin', this.state)
             .then(res => {
                 console.log(res.data);

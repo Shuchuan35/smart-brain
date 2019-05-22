@@ -19,7 +19,7 @@ class Register extends React.Component {
         $.post('/api/register', this.state)
             .then(res => {
                 // console.log(res);
-                if (res.data._id) { //res.data.id
+                if (res.data._id) { 
                     this.props.loadUser(res.data);
                     this.props.onRouteChange('home');
                 }
