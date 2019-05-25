@@ -13,9 +13,11 @@ class Signin extends React.Component {
         this.setState({ [name]: value });
     }
 
-    onSigninClick = () => {
-        // console.log(this.state);
-
+    onSigninClick = e => {
+        e.preventDefault();
+        if (!e.target.checkValidity()) {
+            return;
+        }
         $.post('/api/signin', this.state)
             .then(res => {
                 // console.log(res.data);
@@ -26,6 +28,7 @@ class Signin extends React.Component {
                     console.log('invalid email or password');
                 }
             })
+            .catch(err => console.log(err));
     }
 
     render() {
@@ -33,7 +36,7 @@ class Signin extends React.Component {
         return (
             <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
                 <main className="pa4 black-80">
-                    <div className="measure">
+                    <form className="measure" onSubmit={this.onSigninClick}>
                         <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
                             <legend className="f4 fw6 ph0 mh0">Sign In</legend>
                             <div className="mt3">
@@ -43,6 +46,7 @@ class Signin extends React.Component {
                                     type="email"
                                     name="email" id="email"
                                     onChange={this.handleChange}
+                                    required
                                 />
                             </div>
                             <div className="mv3">
@@ -52,12 +56,12 @@ class Signin extends React.Component {
                                     type="password"
                                     name="password" id="password"
                                     onChange={this.handleChange}
+                                    required
                                 />
                             </div>
                         </fieldset>
                         <div className="">
                             <input
-                                onClick={this.onSigninClick}
                                 className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib"
                                 type="submit"
                                 value="Sign in"
@@ -69,7 +73,7 @@ class Signin extends React.Component {
                                 className="f6 link dim black db pointer"
                             >Register</p>
                         </div>
-                    </div>
+                    </form>
                 </main>
             </article>
         );

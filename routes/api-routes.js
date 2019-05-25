@@ -15,16 +15,6 @@ module.exports = function (app) {
     //====================================
 
     app.post('/api/facemodel', (req, res) => {
-        // clarifaiApp.models
-        //     .predict("a403429f2ddf4b49b307e318f00e528b", "https://samples.clarifai.com/face-det.jpg")
-        //     .then(response => {
-        //         console.log(response);
-        //         res.json(response);
-        //     },
-        //         (err) => {
-        //             res.status(400).json(err);
-        //         }
-        //     );
 
         clarifaiApp.models
             .predict(Clarifai.FACE_DETECT_MODEL, req.body.input)
@@ -50,6 +40,27 @@ module.exports = function (app) {
                 res.json(err);
             });
     });
+    
+    //========================
+    // get single user profile
+    //========================
+
+    app.get('/api/profile/:id', (req, res) => {
+        const { id } = req.params;
+        User.findOne({
+            _id: id
+        })
+            .then(data => {
+                if (data) {
+                    res.json(data);
+                } else {
+                    res.status(404).json('user not found!');
+                }
+            })
+            .catch(err => {
+                res.status(400).json(err);
+            })
+    });
 
     //========================
     // sign in user
@@ -74,7 +85,7 @@ module.exports = function (app) {
                     res.status(400).json('wrong credentials');
                 }
             })
-            .catch(err => res.status(400).json('wrong credentials'));
+            .catch(err => res.status(400).json('Invaid login credentials'));
 
     });
 
@@ -104,27 +115,6 @@ module.exports = function (app) {
                 res.status(400).json('unable to register');
             });
 
-    });
-
-    //========================
-    // get single user profile
-    //========================
-
-    app.get('/api/profile/:id', (req, res) => {
-        const { id } = req.params;
-        User.findOne({
-            _id: id
-        })
-            .then(data => {
-                if (data) {
-                    res.json(data);
-                } else {
-                    res.status(404).json('user not found!');
-                }
-            })
-            .catch(err => {
-                res.status(400).json(err);
-            })
     });
 
     //========================
