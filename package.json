@@ -1,7 +1,10 @@
 {
   "name": "smart-brain",
   "version": "1.0.0",
-  "description": "",
+  "engines": {
+    "node": "10.13.0"
+  },
+  "description": "A face recognition app",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -17,7 +20,7 @@
     "url": "git+https://github.com/Shuchuan35/smart-brain-api.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Jennife Hou",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Shuchuan35/smart-brain-api/issues"
