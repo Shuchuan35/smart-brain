@@ -16,6 +16,10 @@
   z-index: -1;
 }
 
+#error-message {
+  display: none;
+}
+
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 40vmin;

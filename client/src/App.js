@@ -34,7 +34,8 @@ class App extends Component {
     boxes: [],
     route: 'signin',
     isSignedIn: false,
-    user: {}
+    user: {}, 
+    errorMessage: false
   }
 
   loadUser = data => {
@@ -62,7 +63,7 @@ class App extends Component {
       faceBoxes.push(faceBox);
 
     }
-    this.setState({ boxes: faceBoxes });
+    this.setState({ boxes: faceBoxes, errorMessage: false });
   }
 
   onInputChange = e => {
@@ -81,10 +82,13 @@ class App extends Component {
             // console.log(res);
             this.setState(Object.assign(this.state.user, { entries: res.data.entries }))
           });
-
+        
         this.locateFaces(res.data);
       })
-      .catch(err => console.log('unable to get face model', err));
+      .catch(err => {
+        this.setState({ boxes: [], errorMessage: true});
+        console.log('unable to get face model', err);
+      });
   }
 
   onRouteChange = (route) => {
@@ -114,6 +118,11 @@ class App extends Component {
               onImageDetect={this.onImageDetect}
             />
             <FaceRecognitioin boxes={boxes} imageUrl={imageUrl} />
+            {this.state.errorMessage  &&
+                    <div id="error-message" style={{ display: 'inline-block' }}>
+                      Unable to get face model!<br />
+                    </div>
+                  }
           </div>
           : (
             route === 'signin'

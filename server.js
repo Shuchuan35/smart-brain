@@ -9,7 +9,7 @@ app.use(express.urlencoded({ extended: true}));
 app.use(express.json());
 
 if (process.env.NODE_ENV === 'production') {
-    app.use(express.static('client/public'));
+    app.use(express.static('client/build'));
 }
 
 
@@ -22,7 +22,7 @@ require('./routes/api-routes')(app);
 
 if (process.env.NODE_ENV === 'production') {
     app.get('*', function(req, res) {
-        res.sendFile(__dirname + '/client/public/index.html');
+        res.sendFile(__dirname + '/client/build/index.html');
     });
 }
 
