@@ -14,7 +14,7 @@ if (process.env.NODE_ENV === 'production') {
 
 
 //connect to production mongodb
-mongoose.connect(MONGODB_URI || 'mongodb://localhost/smartbrain', {useNewUrlParser: true });
+mongoose.connect(MONGODB_URI || 'mongodb://localhost/smartbrain', {useNewUrlParser: true, useFindAndModify: false });
 
 // mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/smartbrain', { useNewUrlParser: true, useFindAndModify: false });
 

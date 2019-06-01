@@ -15,21 +15,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Shuchuan35/smart-brain-api.git"
+    "url": "git+https://github.com/Shuchuan35/smart-brain.git"
   },
   "keywords": [],
   "author": "Jennife Hou",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Shuchuan35/smart-brain-api/issues"
+    "url": "https://github.com/Shuchuan35/smart-brain/issues"
   },
-  "homepage": "https://github.com/Shuchuan35/smart-brain-api#readme",
+  "homepage": "https://github.com/Shuchuan35/smart-brain#readme",
   "devDependencies": {
     "concurrently": "^3.5.0",
     "nodemon": "^1.19.0"
   },
   "dependencies": {
-    "axios": "^0.19.0",
+    "axios": ">=0.19.0",
     "bcrypt-nodejs": "0.0.3",
     "clarifai": "^2.9.0",
     "express": "^4.16.4",
