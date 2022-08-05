@@ -37,6 +37,6 @@
     "bcrypt-nodejs": "0.0.3",
     "express": "^4.16.4",
     "if-env": "^1.0.4",
-    "mongoose": "^5.5.10"
+    "mongoose": "^5.7.5"
   }
 }
